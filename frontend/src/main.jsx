@@ -1,10 +1,16 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+/**
+ * Objetivo:
+ *    Arquivo inicial responsável por renderizar a aplicação React
+ *    dentro do elemento <div id="root"> do index.html.
+ */
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+
+// Criação do ponto de montagem da aplicação
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
     <App />
-  </StrictMode>,
-)
+  </React.StrictMode>
+);

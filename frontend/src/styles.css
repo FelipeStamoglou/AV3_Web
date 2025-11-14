@@ -1,0 +1,89 @@
+/**
+ * Objetivo:
+ *    Garantir um visual limpo, minimalista e acessível.
+ */
+
+/* Estilo global da página */
+body {
+  margin: 0;
+  padding: 0;
+  background: #121212;  /* fundo escuro minimalista */
+  color: white;         /* contraste adequado */
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Container central da aplicação */
+.container {
+  width: 450px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* Formulário de criação de tarefas */
+.task-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.task-form input {
+  width: 70%;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+/* Botão de adicionar */
+.task-form button {
+  padding: 10px 15px;
+  background: #2563eb; /* azul formal */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Lista de tarefas */
+.task-list {
+  list-style: none;
+  padding: 0;
+}
+
+/* Cada item da lista */
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  background: #1e1e1e;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Área do texto e checkbox */
+.task-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Estilo aplicado em tarefas concluídas */
+.done {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Botão de remoção */
+.delete-btn {
+  background: red;
+  color: white;
+  border: none;
+  padding: 5px 8px;
+  cursor: pointer;
+  border-radius: 3px;
+}
