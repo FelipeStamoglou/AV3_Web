@@ -1,22 +1,28 @@
-/**
- * Objetivo:
- *    Receber a lista de tarefas e renderizar cada uma delas
- *    utilizando o componente TaskItem.
- */
+// ---------------------------------------------------------------------------
+// Componente: TaskList
+// Função: receber uma lista de tarefas e distribuí-las em componentes
+// TaskItem. É o nível intermediário entre a página e os itens.
+//
+// Favorece modularidade e clareza estrutural.
+// ---------------------------------------------------------------------------
 
-import TaskItem from "./TaskItem";
+import TaskItem from "./TaskItem"
 
 export default function TaskList({ tasks, onToggle, onDelete }) {
   return (
-    <ul className="task-list">
-      {tasks.map((task) => (
-        <TaskItem
-          key={task.id}          // chave única para otimizar renderização
-          task={task}            // dados da tarefa
-          onToggle={onToggle}    // callback para marcar como concluída
-          onDelete={onDelete}    // callback para remover a tarefa
-        />
-      ))}
-    </ul>
-  );
+    <div className="task-list">
+      {tasks.length === 0 ? (
+        <p>Nenhuma tarefa cadastrada.</p>
+      ) : (
+        tasks.map((task) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            onToggle={onToggle}
+            onDelete={onDelete}
+          />
+        ))
+      )}
+    </div>
+  )
 }

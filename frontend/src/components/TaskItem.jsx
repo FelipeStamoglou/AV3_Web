@@ -1,31 +1,28 @@
-/**
- * Objetivo:
- *    Representa visualmente cada tarefa no sistema.
- *    Permite alternar seu estado (concluída / pendente) e removê-la.
- */
+// -------------------------------------------------------------------------
+// Componente: TaskItem
+// Função: exibir uma única tarefa, composta por título, descrição e estado.
+// Também disponibiliza ações para concluir/inconcluir e remover.
+//
+// Este componente é essencial para visualização individualizada dos dados.
+// -------------------------------------------------------------------------
 
 export default function TaskItem({ task, onToggle, onDelete }) {
   return (
-    <li className="task-item">
-      <label className="task-left">
-        
-        {/** Checkbox usado para alternar estado da tarefa */}
-        <input
-          type="checkbox"
-          checked={task.is_done}
-          onChange={() => onToggle(task)}
-        />
+    <div className={`task-item ${task.is_done ? "done" : ""}`}>
+      <div className="task-content">
+        <h3>{task.title}</h3>
+        <p>{task.description}</p>
+      </div>
 
-        {/** Exibe o texto da tarefa */}
-        <span className={task.is_done ? "done" : ""}>
-          {task.title}
-        </span>
-      </label>
+      <div className="task-actions">
+        <button onClick={() => onToggle(task.id)}>
+          {task.is_done ? "Desmarcar" : "Concluir"}
+        </button>
 
-      {/** Botão para excluir a tarefa */}
-      <button className="delete-btn" onClick={() => onDelete(task.id)}>
-        x
-      </button>
-    </li>
-  );
+        <button className="delete" onClick={() => onDelete(task.id)}>
+          Excluir
+        </button>
+      </div>
+    </div>
+  )
 }

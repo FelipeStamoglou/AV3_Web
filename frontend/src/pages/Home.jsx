@@ -1,76 +1,70 @@
-/**
- * Objetivo:
- *    Representa a página principal da aplicação. 
- *    Aqui ocorre a integração entre os componentes visuais e os serviços de API.
- */
+// -------------------------------------------------------------------------
+// Página: Home
+// Função: orquestrar o funcionamento da aplicação frontend.
+// Aqui ocorre:
+//
+// - Carregamento inicial das tarefas
+// - Criação de novas tarefas
+// - Atualização do estado (concluir / desmarcar)
+// - Exclusão
+//
+// Esta página integra todos os componentes e serviços.
+// -------------------------------------------------------------------------
 
-import { useEffect, useState } from "react";
-import TaskForm from "../components/TaskForm";
-import TaskList from "../components/TaskList";
-
-// Importação das funções responsáveis pela comunicação com o backend
-import { getTasks, createTask, updateTask, deleteTask } from "../services/api";
+import { useEffect, useState } from "react"
+import TaskForm from "../components/TaskForm"
+import TaskList from "../components/TaskList"
+import { getTasks, createTask, updateTask, deleteTask } from "../services/api"
 
 export default function Home() {
-  /**
-   * Estado "tasks":
-   *    Armazena todas as tarefas retornadas pelo backend.
-   *    Esse estado é automaticamente atualizado quando o usuário
-   *    cria, edita ou exclui uma tarefa.
-   */
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([])
 
-  /**
-   * Carrega todas as tarefas do backend ao inicializar a página.
-   * Essa função chama a API e atualiza o estado local.
-   */
-  async function load() {
-    const data = await getTasks();
-    setTasks(data);
-  }
-
-  // useEffect: executa a função "load" apenas uma vez quando a página carrega.
+  // Carrega tarefas ao iniciar
   useEffect(() => {
-    load();
-  }, []);
+    loadTasks()
+  }, [])
 
-  /**
-   * Função responsável por adicionar uma nova tarefa no backend.
-   */
-  async function handleAdd(title) {
-    await createTask({ title, is_done: false });
-    load(); // recarrega a lista após adicionar
+  const loadTasks = async () => {
+    const data = await getTasks()
+    setTasks(data)
   }
 
-  /**
-   * Alterna o estado de "concluída" de uma tarefa.
-   */
-  async function handleToggle(task) {
-    await updateTask(task.id, { ...task, is_done: !task.is_done });
-    load();
+  // Adiciona nova tarefa
+  const handleAddTask = async (taskData) => {
+    await createTask(taskData)
+    loadTasks()
   }
 
-  /**
-   * Remove uma tarefa permanentemente do sistema.
-   */
-  async function handleDelete(id) {
-    await deleteTask(id);
-    load();
+  // Alterna estado (concluir/inconcluir)
+  const handleToggleTask = async (id) => {
+    const task = tasks.find((t) => t.id === id)
+
+    await updateTask(id, {
+      title: task.title,
+      description: task.description,
+      is_done: !task.is_done,
+    })
+
+    loadTasks()
+  }
+
+  // Remove tarefa
+  const handleDeleteTask = async (id) => {
+    await deleteTask(id)
+    loadTasks()
   }
 
   return (
     <div className="container">
-      <h1>To-Do List</h1>
+      <h1>Gerenciador de Tarefas - AV3</h1>
 
-      {/** Componente responsável pelo formulário de nova tarefa */}
-      <TaskForm onSubmit={handleAdd} />
+      <TaskForm onAdd={handleAddTask} />
 
-      {/** Lista de tarefas consumindo estado atualizado */}
       <TaskList
         tasks={tasks}
-        onToggle={handleToggle}
-        onDelete={handleDelete}
+        onToggle={handleToggleTask}
+        onDelete={handleDeleteTask}
       />
     </div>
-  );
+  )
 }
