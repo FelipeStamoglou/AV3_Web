@@ -14,9 +14,11 @@
 import { useEffect, useState } from "react"
 import TaskForm from "../components/TaskForm"
 import TaskList from "../components/TaskList"
-import { getTasks, createTask, updateTask, deleteTask } from "../services/api"
+// Importação dos serviços responsáveis por comunicar com o backend FastAPI
+import { getNotes, createNote, updateNote, deleteNote } from "../services/api"
 
 export default function Home() {
+    // Estado central que armazena a lista de tarefas carregadas do backend
   const [tasks, setTasks] = useState([])
 
   // Carrega tarefas ao iniciar
@@ -24,22 +26,23 @@ export default function Home() {
     loadTasks()
   }, [])
 
+    // Função responsável por buscar todas as tarefas no backend
   const loadTasks = async () => {
-    const data = await getTasks()
+    const data = await getNotes()
     setTasks(data)
   }
 
-  // Adiciona nova tarefa
+    // Função acionada ao enviar o formulário de nova tarefa
   const handleAddTask = async (taskData) => {
-    await createTask(taskData)
+    await createNote(taskData)
     loadTasks()
   }
 
-  // Alterna estado (concluir/inconcluir)
+    // Alternar o estado de uma tarefa (feito / não feito)
   const handleToggleTask = async (id) => {
     const task = tasks.find((t) => t.id === id)
 
-    await updateTask(id, {
+    await updateNote(id, {
       title: task.title,
       description: task.description,
       is_done: !task.is_done,
@@ -48,22 +51,24 @@ export default function Home() {
     loadTasks()
   }
 
-  // Remove tarefa
-  const handleDeleteTask = async (id) => {
-    await deleteTask(id)
+  // Remove uma tarefa específica
+  const handledeleteNote = async (id) => {
+    await deleteNote(id)
     loadTasks()
   }
 
   return (
     <div className="container">
-      <h1>Gerenciador de Tarefas - AV3</h1>
+      <h1>Gerenciador de Tarefas</h1>
 
+      {/* Formulário de criação de novas tarefas */}
       <TaskForm onAdd={handleAddTask} />
 
+      {/* Lista de tarefas */}
       <TaskList
         tasks={tasks}
         onToggle={handleToggleTask}
-        onDelete={handleDeleteTask}
+        onDelete={handledeleteNote}
       />
     </div>
   )

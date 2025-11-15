@@ -1,42 +1,43 @@
-// --------------------------------------------------------------
-// Arquivo: api.js
-// Camada de serviço responsável por realizar as requisições HTTP
-// ao backend FastAPI. A separação desta lógica favorece a
-// organização e a reutilização nas demais partes da aplicação.
-// --------------------------------------------------------------
+// api.js
+// Camada de serviço para se comunicar com o backend FastAPI
 
+import axios from "axios";
 
-// URL base do backend FastAPI 
-export const API_URL = "http://localhost/api";
+// URL base do backend FastAPI (rodando no Docker)
+export const API_URL = "http://localhost:8000";
 
+// Instância do axios
+const api = axios.create({
+  baseURL: API_URL,
+});
 
-// ========================
-// Obter todas as tarefas
-// ========================
-export const getTasks = async () => {
-  const response = await api.get("/tasks/")
-  return response.data
-}
+// ==============================
+// Listar todas as notas
+// ==============================
+export const getNotes = async () => {
+  const response = await api.get("/notas");
+  return response.data;
+};
 
-// ========================
-// Criar nova tarefa
-// ========================
-export const createTask = async (taskData) => {
-  const response = await api.post("/tasks/", taskData)
-  return response.data
-}
+// ==============================
+// Criar nova nota
+// ==============================
+export const createNote = async (noteData) => {
+  const response = await api.post("/notas", noteData);
+  return response.data;
+};
 
-// ========================
-// Atualizar tarefa existente
-// ========================
-export const updateTask = async (id, updates) => {
-  const response = await api.put(`/tasks/${id}`, updates)
-  return response.data
-}
+// ==============================
+// Atualizar nota
+// ==============================
+export const updateNote = async (id, updates) => {
+  const response = await api.put(`/notas/${id}`, updates);
+  return response.data;
+};
 
-// ========================
-// Excluir tarefa
-// ========================
-export const deleteTask = async (id) => {
-  await api.delete(`/tasks/${id}`)
-}
+// ==============================
+// Deletar nota
+// ==============================
+export const deleteNote = async (id) => {
+  await api.delete(`/notas/${id}`);
+};
