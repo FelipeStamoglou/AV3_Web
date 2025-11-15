@@ -1,65 +1,52 @@
 version: "3.8"
 
 services:
-  db:
-    image: postgres:15
+  postgres:
+    image: postgres:15-alpine
+    container_name: list-postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: todo_db
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: notasdb
     volumes:
       - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     networks:
       - todo-net
 
-  backend1:
+  backend:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
-    container_name: backend1
+      context: ./backend
+    container_name: list-backend
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/todo_db
+      DATABASE_URL: "postgresql+asyncpg://postgres:123@postgres:5432/notasdb"
+      SECRET_KEY: "supersecretkey"
     depends_on:
-      - db
+      - postgres
+    ports:
+      - "8000:8000"
     networks:
       - todo-net
 
-  backend2:
+  frontend:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
-    container_name: backend2
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/todo_db
+      context: ./frontend
+    container_name: list-frontend
     depends_on:
-      - db
-    networks:
-      - todo-net
-
-  backend3:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
-    container_name: backend3
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/todo_db
-    depends_on:
-      - db
+      - backend
     networks:
       - todo-net
 
   nginx:
-    image: nginx:stable
-    container_name: proxy
+    image: nginx:alpine
+    container_name: list-nginx
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/nginx.conf:ro
-      - ./frontend:/usr/share/nginx/html:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - backend1
-      - backend2
-      - backend3
+      - frontend
     networks:
       - todo-net
 

@@ -5,12 +5,10 @@
 // organização e a reutilização nas demais partes da aplicação.
 // --------------------------------------------------------------
 
-import axios from "axios"
 
 // URL base do backend FastAPI 
-const api = axios.create({
-  baseURL: "http://localhost:8000",
-})
+export const API_URL = "http://localhost/api";
+
 
 // ========================
 // Obter todas as tarefas
