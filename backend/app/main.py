@@ -1,80 +1,131 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from typing import List
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from models import Base, Todo
-from schemas import TodoCreate, TodoOut
-import crud
+from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from sqlmodel.ext.asyncio.session import AsyncSession
+from app.db import async_session, init_db
+from app import crud, schemas, auth
+from app.models import User, Note
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@db:5432/todo_db")
+app = FastAPI(title="Notas API")
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# -------------------------------
+# LOGIN TEMPORARIAMENTE DESABILITADO
+# -------------------------------
+# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
-# create tables on startup (simple approach)
-Base.metadata.create_all(bind=engine)
+@app.on_event("startup")
+async def on_startup():
+    await init_db()
 
-app = FastAPI(title="ToDo Distributed API")
+async def get_session() -> AsyncSession:
+    async with async_session() as session:
+        yield session
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# ---------------------------------------------------------------
+# AUTENTICAÇÃO DESABILITADA — SEM JWT, SEM TOKEN, USUÁRIO FIXO
+# ---------------------------------------------------------------
+"""
+async def get_current_user(token: str = Depends(oauth2_scheme), session: AsyncSession = Depends(get_session)):
+    payload = auth.decode_token(token)
+    if not payload or "user_id" not in payload:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
+    user = await crud.get_user_by_email(session, payload.get("email"))
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+    return user
+"""
 
-@app.get("/health")
-def health():
-    return {"status": "ok"}
+# Usando usuário fake id=1
+class FakeUser:
+    id = 1
 
-@app.post("/todos/", response_model=TodoOut)
-def create_todo(todo_in: TodoCreate):
-    db = SessionLocal()
-    try:
-        todo = crud.create_todo(db, todo_in)
-        return todo
-    finally:
-        db.close()
+async def get_current_user():
+    return FakeUser()
 
-@app.get("/todos/", response_model=List[TodoOut])
-def list_todos():
-    db = SessionLocal()
-    try:
-        return crud.get_todos(db)
-    finally:
-        db.close()
 
-@app.get("/todos/{todo_id}", response_model=TodoOut)
-def get_todo(todo_id: int):
-    db = SessionLocal()
-    try:
-        todo = crud.get_todo(db, todo_id)
-        if not todo:
-            raise HTTPException(status_code=404, detail="Todo not found")
-        return todo
-    finally:
-        db.close()
+# ------------------------------------------
+# ROTAS /register e /login COMENTADAS
+# ------------------------------------------
+"""
+@app.post("/register", response_model=dict)
+async def register(user_in: schemas.UserCreate, session: AsyncSession = Depends(get_session)):
+    existing = await crud.get_user_by_email(session, user_in.email)
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    user = await crud.create_user(session, user_in.username, user_in.email, user_in.password)
+    return {"id": user.id, "username": user.username, "email": user.email}
 
-@app.put("/todos/{todo_id}", response_model=TodoOut)
-def update_todo(todo_id: int, todo_in: TodoCreate):
-    db = SessionLocal()
-    try:
-        todo = crud.update_todo(db, todo_id, todo_in)
-        if not todo:
-            raise HTTPException(status_code=404, detail="Todo not found")
-        return todo
-    finally:
-        db.close()
+@app.post("/login", response_model=schemas.Token)
+async def login(form_data: schemas.UserCreate, session: AsyncSession = Depends(get_session)):
+    user = await crud.authenticate_user(session, form_data.email, form_data.password)
+    if not user:
+        raise HTTPException(status_code=400, detail="Incorrect email or password")
+    token = auth.create_access_token({"user_id": user.id, "email": user.email})
+    return {"access_token": token, "token_type": "bearer"}
+"""
+# ------------------------------------------
+# FIM DO BLOCO COMENTADO
+# ------------------------------------------
 
-@app.delete("/todos/{todo_id}")
-def delete_todo(todo_id: int):
-    db = SessionLocal()
-    try:
-        ok = crud.delete_todo(db, todo_id)
-        if not ok:
-            raise HTTPException(status_code=404, detail="Todo not found")
-        return {"deleted": True}
-    finally:
-        db.close()
+
+# -------------------------
+# CRUD DE NOTAS SEM LOGIN
+# -------------------------
+
+@app.post("/notas", response_model=schemas.NoteOut)
+async def create_note(note_in: schemas.NoteCreate,
+                      current_user=Depends(get_current_user),
+                      session: AsyncSession = Depends(get_session)):
+
+    note = await crud.create_note(session, current_user.id, note_in.title, note_in.content)
+    return note
+
+
+@app.get("/notas", response_model=list[schemas.NoteOut])
+async def list_notes(q: str | None = None,
+                     current_user=Depends(get_current_user),
+                     session: AsyncSession = Depends(get_session)):
+
+    if q:
+        res = await crud.search_notes_by_title(session, current_user.id, q)
+    else:
+        res = await crud.get_notes_by_owner(session, current_user.id)
+    return res
+
+
+@app.get("/notas/{note_id}", response_model=schemas.NoteOut)
+async def get_note(note_id: int,
+                   current_user=Depends(get_current_user),
+                   session: AsyncSession = Depends(get_session)):
+
+    note = await crud.get_note_by_id(session, note_id)
+    if not note or note.owner_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Note not found")
+    return note
+
+
+@app.put("/notas/{note_id}", response_model=schemas.NoteOut)
+async def update_note(note_id: int,
+                      note_in: schemas.NoteUpdate,
+                      current_user=Depends(get_current_user),
+                      session: AsyncSession = Depends(get_session)):
+
+    note = await crud.get_note_by_id(session, note_id)
+    if not note or note.owner_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Note not found")
+
+    note = await crud.update_note(session, note, note_in.title, note_in.content)
+    return note
+
+
+@app.delete("/notas/{note_id}")
+async def delete_note(note_id: int,
+                      current_user=Depends(get_current_user),
+                      session: AsyncSession = Depends(get_session)):
+
+    note = await crud.get_note_by_id(session, note_id)
+    if not note or note.owner_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Note not found")
+
+    await crud.delete_note(session, note)
+    return {"detail": "deleted"}
