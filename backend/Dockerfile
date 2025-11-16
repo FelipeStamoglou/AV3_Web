@@ -1,17 +1,19 @@
 FROM python:3.11-slim
 
 WORKDIR /app
+
 ENV PYTHONDONTWRITEBYTECODE=1
+
 ENV PYTHONUNBUFFERED=1
 
-# Copia requirements (que está dentro de app/)
-COPY app/requirements.txt .
+# Copia requirements.txt para dentro do container
+COPY requirements.txt .
 
 # Instala dependências
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copia toda a pasta app para dentro do container
-COPY app ./app
+COPY app/ ./app
 
 EXPOSE 8000
 

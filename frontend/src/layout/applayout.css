@@ -1,0 +1,38 @@
+.layout-container {
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding: 30px;
+}
+
+.layout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto 30px auto;
+}
+
+.layout-title {
+  font-size: 28px;
+  color: #333;
+  font-weight: 600;
+}
+
+.logout-button {
+  background: #e63946;
+  border: none;
+  padding: 10px 20px;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.logout-button:hover {
+  background: #c7333f;
+}
+
+.layout-content {
+  max-width: 1100px;
+  margin: 0 auto;
+}

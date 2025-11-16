@@ -1,0 +1,32 @@
+.dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f6f7fa, #eef1f6);
+}
+
+.dashboard-content {
+  width: 90%;
+  max-width: 900px;
+  margin: 20px auto;
+}
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.notes-count {
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: bold;
+}
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  background-color: #1e4fc8;
+}
