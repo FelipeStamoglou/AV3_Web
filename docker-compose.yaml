@@ -40,8 +40,7 @@ services:
     container_name: list-frontend
     networks:
       - todo-net
-    depends_on:
-      - backend
+
 
   nginx:
     image: nginx:alpine
@@ -51,9 +50,7 @@ services:
     volumes:
       # Configuração do nginx
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-
-      # Configuração do Frontend
-      - ./frontend/dist:/usr/share/nginx/html
+      
     depends_on:
       - backend
       - frontend

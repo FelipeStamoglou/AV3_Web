@@ -11,16 +11,16 @@ const NotFound = () => {
           <div className="mx-auto bg-muted w-20 h-20 rounded-full flex items-center justify-center">
             <FileQuestion className="h-10 w-10 text-muted-foreground" />
           </div>
-          <div>
-            <h1 className="text-6xl font-bold text-primary mb-2">404</h1>
-            <h2 className="text-2xl font-semibold mb-2">Página não encontrada</h2>
-            <p className="text-muted-foreground mb-6">
-              A página que você está procurando não existe ou foi movida.
-            </p>
-            <Button asChild>
-              <Link to="/login">Voltar para o Login</Link>
-            </Button>
-          </div>
+
+          <h1 className="text-6xl font-bold text-primary mb-2">404</h1>
+          <h2 className="text-2xl font-semibold mb-2">Página não encontrada</h2>
+          <p className="text-muted-foreground mb-6">
+            A página que você está tentando acessar não existe ou foi movida.
+          </p>
+
+          <Button asChild>
+            <Link to="/">Voltar para o início</Link>
+          </Button>
         </CardContent>
       </Card>
     </div>
