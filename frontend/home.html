@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NotesApp</title>
+    <link rel="icon" type="image/png" href="./img/logo_notesApp.png">
+
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --card: #1a1a1a;
+            --text: #e5e5e5;
+            --accent: #8b5cf6; /* Roxo */
+            --accent-hover: #7c3aed;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Inter", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+            animation: fadeIn 0.7s ease;
+        }
+
+        h1 {
+            font-size: 2.7rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            opacity: 0.85;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsivo */
+        @media (max-width: 480px) {
+            .container {
+                margin: 20px;
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📝 NotesApp</h1>
+        <p>Organize suas ideias, tarefas e pensamentos em um só lugar. 
+              Simples, rápido e seguro.</p>
+        
+        <a href="./dashboard.html" class="btn">Ir para o Dashboard →</a>
+    </div>
+</body>
+</html>

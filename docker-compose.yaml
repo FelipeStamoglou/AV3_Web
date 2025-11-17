@@ -35,12 +35,20 @@ services:
       - todo-net
 
   frontend:
-    build:
-      context: ./frontend
+    build: ./frontend    
     container_name: list-frontend
+    #ports:
+      #- "80:80"
+    #volumes:
+      # Montagem dos arquivos estáticos do frontend no nginx
+      #- ./frontend:/usr/share/nginx/html
+      # Configuração do nginx
+      #- ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+      - postgres
     networks:
       - todo-net
-
 
   nginx:
     image: nginx:alpine
@@ -48,12 +56,14 @@ services:
     ports:
       - "80:80"
     volumes:
+      # Montagem dos arquivos estáticos do frontend
+      - ./frontend:/usr/share/nginx/html
       # Configuração do nginx
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       
     depends_on:
       - backend
-      - frontend
+      
     networks:
       - todo-net
 

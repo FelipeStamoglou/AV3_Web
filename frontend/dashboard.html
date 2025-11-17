@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="./css/dashboard.css">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static/dist/lucide.css">
+
+<html lang="pt-BR">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<body>
+    <!-- ========== HEADER ========== -->
+  <header class="header">
+    <div class="header-left">
+      <img src="./img/logo_notesApp.png" alt="logo">
+      <div>
+        <div class="header-title">Minhas Notas</div>
+      </div>
+    </div>
+
+    <button class="btn-logout" onclick="logoutUser()">
+      <i data-lucide="log-out"></i>
+      Sair
+    </button>
+  </header>
+
+    <!-- ========== ÁREA PRINCIPAL ========== -->
+  <main class="container">
+
+        <!-- Caixa de busca -->
+    <div class="search-area">
+      <input class="input-dark" placeholder="Buscar notas por titulo..." id="searchInput">
+
+      <button class="btn-primary" id="btnSearch" onclick="searchNotes()">
+        <i data-lucide="search"></i> Buscar
+      </button>
+
+      <button class="btn-clear hidden" id="btnClear" onclick="clearSearch()">
+        <i data-lucide="x"></i> Limpar
+      </button>
+
+      <button class="btn-secundary" id="btnNewNote" onclick="openModal()">
+        <i data-lucide="plus"></i> Nova Nota
+      </button>
+
+    </div>
+
+        <!-- Lista de notas -->
+    <div id="notesGrid" class="notes-grid">
+      <!-- Gerado via JS -->
+    </div>
+
+  </main>
+
+      <!-- ========== MODAL DE CRIAÇÃO/EDIÇÃO ========== -->
+<div id="noteModal" class="modal hidden">
+
+    <div class="modal-content">
+
+         <h2 id="modalTitle">Nova Nota</h2>
+
+        <label for="modalTitleInput">Titulo</label>
+        <input type="text" id="modalTitleInput" placeholder="Digite o titulo da nota..." />
+
+        <label for="modalContentInput">Conteudo</label>
+        <textarea id="modalContentInput" placeholder="Escreva o conteudo da sua nota..."></textarea>
+
+        <div class="modal-buttons">
+            <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+            <button class="btn-save" onclick="saveNote()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+    <!-- ========== TOAST ========== -->
+<div id="toast" class="toast hidden"></div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script> lucide.createIcons(); </script>
+
+    <script src="./js/dashboard.js"></script>
+
+</body>
+</html>
