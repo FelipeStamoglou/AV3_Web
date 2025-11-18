@@ -10,7 +10,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - "5643:5643"
+      - "5643:5432"
     networks:
       - todo-net
     healthcheck:
