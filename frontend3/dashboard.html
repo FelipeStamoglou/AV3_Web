@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/dashboard.css">
+  <link rel="stylesheet" href="https://unpkg.com/lucide-static/dist/lucide.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <title>Dashboard - Minhas Notas</title>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <img src="./img/logo_notesApp.png" alt="logo">
+      <div class="header-title">Minhas Notas</div>
+    </div>
+
+    <button class="btn-logout" onclick="logoutUser()">
+      <i data-lucide="log-out"></i> Sair
+    </button>
+  </header>
+
+  <main class="container">
+
+    <!-- Busca -->
+    <div class="search-area">
+      <input class="input-dark" placeholder="Buscar notas por título..." id="searchInput">
+      <button class="btn-primary" onclick="searchNotes()"> <i data-lucide="search"></i> Buscar </button>
+      <button class="btn-clear hidden" id="btnClear" onclick="clearSearch()"> <i data-lucide="x"></i> Limpar </button>
+      <button class="btn-secundary" onclick="openModal()"> <i data-lucide="plus"></i> Nova Nota </button>
+    </div>
+
+    <!-- Grid -->
+    <div id="notesGrid" class="notes-grid"></div>
+
+  </main>
+
+  <!-- MODAL -->
+  <div id="noteModal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="modalTitle">Nova Nota</h2>
+
+      <label for="modalTitleInput">Título</label>
+      <input type="text" id="modalTitleInput" />
+
+      <label for="modalContentInput">Conteúdo</label>
+      <textarea id="modalContentInput"></textarea>
+
+      <div class="modal-buttons">
+        <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+        <button class="btn-save" onclick="saveNote()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script> lucide.createIcons(); </script>
+  <script src="./js/dashboard.js"></script>
+
+</body>
+</html>

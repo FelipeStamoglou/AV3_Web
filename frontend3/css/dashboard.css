@@ -1,0 +1,368 @@
+/* ===========================
+   RESET E BASE
+=========================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: #0d0f13;
+  color: #e5e7eb;
+  min-height: 100vh;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+.header {
+  width: 100%;
+  background: #11141a;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1f242d;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-left img {
+  width: 32px;
+}
+
+.header-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.header-subtitle {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* Botão sair */
+.btn-logout {
+  background: #ef4444;
+  padding: 10px 18px;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center; /* CENTRALIZA VERTICALMENTE */
+  justify-content: center;
+  gap: 8px; /* ESPAÇO ENTRE ICON E TEXTO */
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn-logout svg {
+  width: 18px;   /* GARANTE TAMANHO FIXO */
+  height: 18px;
+  stroke-width: 2.2;
+}
+
+.btn-logout:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+
+/* ===========================
+   ÁREA PRINCIPAL
+=========================== */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px;
+}
+
+/* Busca */
+.search-area {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.input-dark {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  background: #1a1e25;
+  border: 1px solid #2a303b;
+  color: #fff;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* Botão limpar busca */
+.btn-clear {
+  background: #ffffff10;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid #ffffff20;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s;
+}
+
+.btn-clear:hover {
+  background: #ffffff20;
+}
+
+.hidden {
+  display: none !important;
+}
+
+
+
+/*Nova nota*/
+.btn-secundary {
+  background: #8b5cf6; /* Roxo */
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+/* HOVER */
+.btn-secundary:hover {
+  background: #7c3aed; /* Roxo mais escuro */
+  transform: translateY(-1px);
+}
+
+/* Ícone */
+.btn-secundary.svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2.2;
+}
+
+/* ===========================
+   GRID DE NOTAS
+=========================== */
+.notes-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+}
+
+.note-card {
+  background: #11141a;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #1f242d;
+  transition: 0.2s;
+}
+.note-card:hover {
+  transform: translateY(-2px);
+  border: 1px solid #374151;
+}
+
+.note-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.note-content {
+  font-size: 14px;
+  color: #9ca3af;
+  margin-bottom: 18px;
+}
+
+/* Botões da nota */
+.note-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-edit {
+  flex: 1;
+  background: transparent;
+  border: 1px solid #374151;
+  padding: 8px;
+  color: #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-edit:hover {
+  background: #1f242d;
+}
+
+.btn-delete {
+  background: #ef4444;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+.btn-delete:hover {
+  background: #b91c1c;
+}
+
+/* ===== MODAL ===== */
+
+/* Fundo escuro semi-transparente */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Caixa do modal */
+.modal-content {
+    background: #1b1f27;
+    padding: 25px;
+    width: 450px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    color: #fff;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-content label {
+    display: block;
+    margin-top: 12px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.modal-content input,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    background: #0f1117;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+}
+
+/* Botões */
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-cancel {
+    background: #333;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+}
+
+.btn-save {
+    background: #4f7cf5;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+}
+
+.btn-save:hover {
+    background: #6b92ff;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+
+/* ===== TOAST ===== */
+
+.toast {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    background: #1e293b;
+    padding: 14px 22px;
+    border-left: 4px solid #3b82f6;
+    border-radius: 8px;
+    color: #fff;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: .3s;
+    z-index: 1100;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast.hidden {
+    display: none;
+}
+
+/* ===========================
+   TOAST (ALERTAS)
+=========================== */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #1f2937;
+  color: white;
+  padding: 14px 18px;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition: 0.3s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}

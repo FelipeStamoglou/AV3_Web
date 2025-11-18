@@ -1,81 +1,98 @@
 <!DOCTYPE html>
-<link rel="stylesheet" href="./css/dashboard.css">
-<link rel="stylesheet" href="https://unpkg.com/lucide-static/dist/lucide.css">
-
 <html lang="pt-BR">
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<body>
-    <!-- ========== HEADER ========== -->
-  <header class="header">
-    <div class="header-left">
-      <img src="./img/logo_notesApp.png" alt="logo">
-      <div>
-        <div class="header-title">Minhas Notas</div>
-      </div>
-    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Notas</title>
 
-    <button class="btn-logout" onclick="logoutUser()">
-      <i data-lucide="log-out"></i>
-      Sair
-    </button>
-  </header>
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- ========== ÁREA PRINCIPAL ========== -->
-  <main class="container">
+    <!-- Toast -->
+    <style>
+        #toast {
+            transition: opacity .4s ease;
+        }
+    </style>
+</head>
 
-        <!-- Caixa de busca -->
-    <div class="search-area">
-      <input class="input-dark" placeholder="Buscar notas por titulo..." id="searchInput">
+<body class="bg-gray-100 min-h-screen">
 
-      <button class="btn-primary" id="btnSearch" onclick="searchNotes()">
-        <i data-lucide="search"></i> Buscar
-      </button>
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-purple-700">Minhas Notas</h1>
 
-      <button class="btn-clear hidden" id="btnClear" onclick="clearSearch()">
-        <i data-lucide="x"></i> Limpar
-      </button>
+        <button onclick="logoutUser()"
+                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+            Sair
+        </button>
+    </nav>
 
-      <button class="btn-secundary" id="btnNewNote" onclick="openModal()">
-        <i data-lucide="plus"></i> Nova Nota
-      </button>
+    <!-- CONTAINER -->
+    <main class="max-w-4xl mx-auto mt-8 px-4">
 
-    </div>
+        <!-- SEARCH + ADD -->
+        <div class="flex items-center gap-3 mb-6">
+            <input id="searchInput"
+                   type="text"
+                   placeholder="Buscar nota..."
+                   class="flex-1 p-2 border rounded">
 
-        <!-- Lista de notas -->
-    <div id="notesGrid" class="notes-grid">
-      <!-- Gerado via JS -->
-    </div>
+            <button id="btnClear"
+                    onclick="clearSearch()"
+                    class="hidden bg-gray-400 text-white px-3 py-2 rounded">
+                Limpar
+            </button>
 
-  </main>
+            <button onclick="openModal()"
+                    class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+                Nova Nota
+            </button>
+        </div>
 
-      <!-- ========== MODAL DE CRIAÇÃO/EDIÇÃO ========== -->
-<div id="noteModal" class="modal hidden">
+        <!-- NOTES GRID -->
+        <div id="notesGrid"
+             class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        </div>
+    </main>
 
-    <div class="modal-content">
+    <!-- MODAL -->
+    <div id="noteModal"
+         class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
 
-         <h2 id="modalTitle">Nova Nota</h2>
+        <div class="bg-white shadow-lg rounded p-6 w-96">
 
-        <label for="modalTitleInput">Titulo</label>
-        <input type="text" id="modalTitleInput" placeholder="Digite o titulo da nota..." />
+            <h2 id="modalTitle" class="text-xl font-bold mb-4"></h2>
 
-        <label for="modalContentInput">Conteudo</label>
-        <textarea id="modalContentInput" placeholder="Escreva o conteudo da sua nota..."></textarea>
+            <input id="modalTitleInput"
+                   type="text"
+                   placeholder="Título"
+                   class="w-full p-2 border rounded mb-3">
 
-        <div class="modal-buttons">
-            <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-            <button class="btn-save" onclick="saveNote()">Salvar</button>
+            <textarea id="modalContentInput"
+                      placeholder="Conteúdo"
+                      class="w-full p-2 border rounded mb-4 h-32"></textarea>
+
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal()"
+                        class="px-4 py-2 bg-gray-300 rounded">
+                    Cancelar
+                </button>
+
+                <button onclick="saveNote()"
+                        class="px-4 py-2 bg-purple-600 text-white rounded">
+                    Salvar
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-    <!-- ========== TOAST ========== -->
-<div id="toast" class="toast hidden"></div>
+    <!-- TOAST -->
+    <div id="toast"
+         class="hidden fixed bottom-4 right-4 bg-purple-600 text-white px-4 py-2 rounded shadow">
+    </div>
 
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script> lucide.createIcons(); </script>
-
-    <script src="./js/dashboard.js"></script>
-
+    <!-- JS -->
+    <script src="js/dashboard.js"></script>
 </body>
 </html>
