@@ -8,3 +8,4 @@ pydantic==1.10.12
 alembic==1.11.1
 email-validator
 pydantic[email]
+argon2-cffi

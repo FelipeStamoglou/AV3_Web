@@ -3,6 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .models import User, Note
 from .auth import get_password_hash, verify_password
 
+
+async def get_user_by_id(session: AsyncSession, user_id: int):
+    return await session.get(User, user_id)
+
 # Users
 async def get_user_by_email(session: AsyncSession, email: str):
     q = select(User).where(User.email == email)
