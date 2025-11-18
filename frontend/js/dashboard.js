@@ -1,110 +1,98 @@
-const API_URL = "/api/notas";   // via Nginx
+const API_DASH = "/api";
+let editingId = null;
 
-let editingNoteId = null;
+// ------------------ AUTH ------------------
+const token = localStorage.getItem("token");
 
-// ============================
-// CARREGAR NOTAS DO BACKEND
-// ============================
+if (!token) {
+    window.location.href = "login.html";
+}
+
+function authHeaders(extra = {}) {
+    return {
+        "Authorization": `Bearer ${token}`,
+        ...extra
+    };
+}
+
+// ------------------ LOAD NOTES ------------------
 async function loadNotes() {
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Erro ao listar");
+        const res = await fetch(`${API_DASH}/notas`, {
+            headers: authHeaders()
+        });
 
-        const notes = await response.json();
+        if (!res.ok) throw new Error("load failed");
+
+        const notes = await res.json();
         renderNotes(notes);
+
     } catch (err) {
+        console.error(err);
         showToast("Erro ao carregar notas", "error");
     }
 }
 
 function renderNotes(notes) {
-    const listContainer = document.getElementById("notesGrid");
-    listContainer.innerHTML = "";
+    const grid = document.getElementById("notesGrid");
 
-    if (notes.length === 0) {
-        listContainer.innerHTML = `<p style="opacity:0.6;">Nenhuma nota encontrada.</p>`;
+    if (!notes || notes.length === 0) {
+        grid.innerHTML = `<p class="opacity-60 text-center col-span-full">Nenhuma nota encontrada.</p>`;
         return;
     }
 
-    notes.forEach(note => {
-        const card = `
-            <div class="note-card">
-                <h3 class="note-title">${note.title}</h3>
-                <p class="note-content">${note.content}</p>
+    grid.innerHTML = notes
+        .map(
+            n => `
+<div class="bg-white shadow p-4 rounded relative">
+    <h3 class="font-bold text-lg">${escapeHtml(n.title)}</h3>
+    <p class="mt-2 text-gray-700 whitespace-pre-line">${escapeHtml(n.content)}</p>
 
-                <div class="note-actions">
-                    <button class="btn-edit"
-                        onclick="openModal(${note.id}, '${note.title}', '${note.content}')">
-                        ✏️ Editar
-                    </button>
+    <div class="mt-4 flex gap-2">
+        <button onclick="editNote(${n.id}, '${escapeJs(n.title)}', '${escapeJs(n.content)}')"
+            class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Editar
+        </button>
 
-                    <button class="btn-delete" onclick="deleteNote(${note.id})">
-                        🗑 Excluir
-                    </button>
-                </div>
-            </div>
-        `;
-        listContainer.innerHTML += card;
-    });
+        <button onclick="deleteNote(${n.id})"
+            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+            Excluir
+        </button>
+    </div>
+</div>`
+        )
+        .join("");
 }
 
-loadNotes();
-
-// ============================
-// BUSCAR
-// ============================
-async function searchNotes() {
-    const term = document.getElementById("searchInput").value.trim();
-
-    const clearBtn = document.getElementById("btnClear");
-    const newNoteBtn = document.getElementById("btnNewNote");
-
-    clearBtn.classList.toggle("hidden", term.length === 0);
-    newNoteBtn.classList.toggle("hidden", term.length > 0);
-
-    if (!term) {
-        loadNotes();
-        return;
-    }
-
-    const response = await fetch(`${API_URL}?q=${term}`);
-    const notes = await response.json();
-    renderNotes(notes);
+// ------------------ HTML ESCAPE ------------------
+function escapeHtml(s) {
+    if (!s) return "";
+    return s
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
 }
 
-document.getElementById("searchInput").addEventListener("input", searchNotes);
-
-// ============================
-// LIMPAR BUSCA
-// ============================
-function clearSearch() {
-    document.getElementById("searchInput").value = "";
-    document.getElementById("btnClear").classList.add("hidden");
-    document.getElementById("btnNewNote").classList.remove("hidden");
-    loadNotes();
+function escapeJs(s) {
+    if (!s) return "";
+    return s.replace(/'/g, "\\'");
 }
 
-// ============================
-// MODAL
-// ============================
-function openModal(id = null, title = "", content = "") {
-    editingNoteId = id;
-
-    document.getElementById("modalTitleInput").value = title;
-    document.getElementById("modalContentInput").value = content;
-
+// ------------------ MODAL ------------------
+function openModal() {
+    editingId = null;
+    document.getElementById("modalTitle").textContent = "Nova Nota";
+    document.getElementById("modalTitleInput").value = "";
+    document.getElementById("modalContentInput").value = "";
     document.getElementById("noteModal").classList.remove("hidden");
-    document.getElementById("modalTitle").innerText =
-        id ? "Editar Nota" : "Nova Nota";
 }
 
 function closeModal() {
     document.getElementById("noteModal").classList.add("hidden");
 }
 
-// ============================
-// SALVAR (CRIAR OU EDITAR)
-// ============================
+// ------------------ SAVE NOTE ------------------
 async function saveNote() {
     const title = document.getElementById("modalTitleInput").value.trim();
     const content = document.getElementById("modalContentInput").value.trim();
@@ -115,42 +103,101 @@ async function saveNote() {
     }
 
     const payload = { title, content };
-    let url = API_URL;
-    let method = "POST";
 
-    if (editingNoteId) {
-        url = `${API_URL}/${editingNoteId}`;
-        method = "PUT";
+    const url = editingId
+        ? `${API_DASH}/notas/${editingId}`
+        : `${API_DASH}/notas`;
+
+    const method = editingId ? "PUT" : "POST";
+
+    try {
+        const res = await fetch(url, {
+            method,
+            headers: authHeaders({ "Content-Type": "application/json" }),
+            body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error("save failed");
+
+        closeModal();
+        loadNotes();
+        showToast(editingId ? "Nota atualizada" : "Nota criada");
+
+    } catch (err) {
+        console.error(err);
+        showToast("Erro ao salvar nota", "error");
+    }
+}
+
+// ------------------ EDIT NOTE ------------------
+function editNote(id, title, content) {
+    editingId = id;
+    document.getElementById("modalTitle").textContent = "Editar Nota";
+    document.getElementById("modalTitleInput").value = title;
+    document.getElementById("modalContentInput").value = content;
+    document.getElementById("noteModal").classList.remove("hidden");
+}
+
+// ------------------ DELETE NOTE ------------------
+async function deleteNote(id) {
+    if (!confirm("Deseja excluir esta nota?")) return;
+
+    try {
+        const res = await fetch(`${API_DASH}/notas/${id}`, {
+            method: "DELETE",
+            headers: authHeaders()
+        });
+
+        if (!res.ok) throw new Error("delete failed");
+
+        loadNotes();
+        showToast("Nota deletada");
+
+    } catch (err) {
+        console.error(err);
+        showToast("Erro ao deletar nota", "error");
+    }
+}
+
+// ------------------ SEARCH ------------------
+function searchNotes() {
+    const q = document.getElementById("searchInput").value.trim();
+
+    if (!q) {
+        loadNotes();
+        return;
     }
 
-    await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    });
+    fetch(`${API_DASH}/notas?q=${encodeURIComponent(q)}`, {
+        headers: authHeaders()
+    })
+        .then(r => r.json())
+        .then(renderNotes)
+        .catch(() => showToast("Erro na busca", "error"));
 
-    closeModal();
-    loadNotes();
-    showToast(editingNoteId ? "Nota atualizada!" : "Nota criada!");
+    document.getElementById("btnClear").classList.remove("hidden");
 }
 
-// ============================
-// DELETE
-// ============================
-async function deleteNote(id) {
-    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+function clearSearch() {
+    document.getElementById("searchInput").value = "";
+    document.getElementById("btnClear").classList.add("hidden");
     loadNotes();
-    showToast("Nota deletada!");
 }
 
-// ============================
-// MONITORAR DIGITAÇÃO DA BARRA DE BUSCA
-// ============================
-document.getElementById("searchInput").addEventListener("input", searchNotes);
-
-// ============================
-// LOGOUT
-// ============================
+// ------------------ LOGOUT ------------------
 function logoutUser() {
-    window.location.href = "home.html";
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
 }
+
+// ------------------ TOAST ------------------
+function showToast(msg, type = "ok") {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.background = type === "error" ? "#ef4444" : "#6b46ff";
+    t.classList.remove("hidden");
+    setTimeout(() => t.classList.add("hidden"), 2200);
+}
+
+// ------------------ INITIAL LOAD ------------------
+window.addEventListener("load", loadNotes);
