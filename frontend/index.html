@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; URL=login.html">
     <title>Redirecionando...</title>
+    <script>
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            window.location.href = "dashboard.html";
+        } else {
+            window.location.href = "login.html";
+        }
+    </script>
 </head>
 <body>
 </body>

@@ -15,14 +15,16 @@ function authHeaders(extra = {}) {
     };
 }
 
-// ------------------ LOAD NOTES ------------------
+// ============================
+// CARREGAR NOTAS DO BACKEND
+// ============================
 async function loadNotes() {
     try {
         const res = await fetch(`${API_DASH}/notas`, {
             headers: authHeaders()
         });
 
-        if (!res.ok) throw new Error("load failed");
+        if (!res.ok) throw new Error("Erro ao listar");
 
         const notes = await res.json();
         renderNotes(notes);
@@ -78,6 +80,17 @@ function escapeJs(s) {
     if (!s) return "";
     return s.replace(/'/g, "\\'");
 }
+
+// ============================
+// LIMPAR BUSCA
+// ============================
+function clearSearch() {
+    document.getElementById("searchInput").value = "";
+    document.getElementById("btnClear").classList.add("hidden");
+    document.getElementById("btnNewNote").classList.remove("hidden");
+    loadNotes();
+}
+
 
 // ------------------ MODAL ------------------
 function openModal() {
@@ -183,6 +196,11 @@ function clearSearch() {
     document.getElementById("btnClear").classList.add("hidden");
     loadNotes();
 }
+
+// ============================
+// MONITORAR DIGITAÇÃO DA BARRA DE BUSCA
+// ============================
+document.getElementById("searchInput").addEventListener("input", searchNotes);
 
 // ------------------ LOGOUT ------------------
 function logoutUser() {

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Criar Conta - Minhas Notas</title>
+
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="./css/register.css">
+    <link rel="stylesheet" href="./css/toast.css">
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="login-card">
+
+            <h1 class="register-title">Criar Conta</h1>
+            <p class="register-subtitle">Preencha os dados para continuar</p>
+
+            <form class="registerForm">
+
+                <div class="input-group">
+                    <label for="username">Usuário</label>
+                    <input type="text" id="username" placeholder="Digite seu usuário" required>
+                </div>
+
+                 <div class="input-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" placeholder="Digite seu e-mail" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" placeholder="Digite sua senha" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirm">Confirmar Senha</label>
+                    <input type="password" id="confirm" placeholder="Repita sua senha" required>
+                </div>
+
+                <button type="submit" class="btn-login">Criar Conta</button>
+
+                <div class="link">
+                    Já possui conta?
+                    <a href="login.html">Fazer Login</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script src="./js/toast.js"></script>
+    <script src="./js/register.js"></script>
+</body>
+</html>

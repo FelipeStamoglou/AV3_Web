@@ -8,14 +8,14 @@ body {
 }
 
 /* Container central */
-.login-container {
+.register-container {
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* Card de Login */
+/* Card de Registro */
 .login-card {
     background: #161920;
     padding: 40px;
@@ -24,15 +24,23 @@ body {
     box-shadow: 0px 0px 15px rgba(0,0,0,0.4);
 }
 
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 18px;
+}
+
+
 /* Título */
-.login-title {
+.register-title {
     text-align: center;
     margin-bottom: 5px;
     font-size: 26px;
     font-weight: bold;
 }
 
-.login-subtitle {
+.register-subtitle {
     text-align: center;
     font-size: 14px;
     color: #9ca3af;
@@ -40,7 +48,7 @@ body {
 }
 
 /* Campos */
-.form-group {
+.registerForm {
     margin-bottom: 18px;
     display: flex;
     flex-direction: column;
@@ -81,23 +89,6 @@ input {
     opacity: 0.9;
 }
 
-.link {
-    margin-top: 15px;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #b8b8b8;
-}
-
-.link a {
-    color: #8a63ff;
-    margin-left: 5px;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.link a:hover {
-    text-decoration: underline;
-}
 .link {
     margin-top: 15px;
     text-align: center;
