@@ -1,13 +1,34 @@
-from pydantic import BaseModel
 from typing import Optional
+from pydantic import BaseModel, EmailStr
+from datetime import datetime
 
-class TodoCreate(BaseModel):
+class UserCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+
+class LoginInput(BaseModel):
+    email: EmailStr
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+class TokenData(BaseModel):
+    user_id: Optional[int] = None
+
+class NoteCreate(BaseModel):
     title: str
-    description: Optional[str] = None
-    done: Optional[bool] = False
+    content: str
 
-class TodoOut(TodoCreate):
+class NoteUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+
+class NoteOut(BaseModel):
     id: int
-
-    class Config:
-        orm_mode = True
+    owner_id: int
+    title: str
+    content: str
+    created_at: datetime

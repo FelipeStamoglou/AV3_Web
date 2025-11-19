@@ -1,35 +1,67 @@
-from sqlalchemy.orm import Session
-from models import Todo
-from schemas import TodoCreate
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from .models import User, Note
+from .auth import get_password_hash, verify_password
 
-def create_todo(db: Session, todo_in: TodoCreate):
-    t = Todo(title=todo_in.title, description=todo_in.description, done=todo_in.done)
-    db.add(t)
-    db.commit()
-    db.refresh(t)
-    return t
 
-def get_todos(db: Session):
-    return db.query(Todo).all()
+async def get_user_by_id(session: AsyncSession, user_id: int):
+    return await session.get(User, user_id)
 
-def get_todo(db: Session, todo_id: int):
-    return db.query(Todo).filter(Todo.id == todo_id).first()
+# Users
+async def get_user_by_email(session: AsyncSession, email: str):
+    q = select(User).where(User.email == email)
+    res = await session.execute(q)
+    return res.scalar_one_or_none()
 
-def update_todo(db: Session, todo_id: int, todo_in: TodoCreate):
-    t = db.query(Todo).filter(Todo.id == todo_id).first()
-    if not t:
+async def create_user(session: AsyncSession, username: str, email: str, password: str):
+    user = User(username=username, email=email, password_hash=get_password_hash(password))
+    session.add(user)
+    await session.commit()
+    await session.refresh(user)
+    return user
+
+async def authenticate_user(session: AsyncSession, email: str, password: str):
+    user = await get_user_by_email(session, email)
+    if not user:
         return None
-    t.title = todo_in.title
-    t.description = todo_in.description
-    t.done = todo_in.done
-    db.commit()
-    db.refresh(t)
-    return t
+    if not verify_password(password, user.password_hash):
+        return None
+    return user
 
-def delete_todo(db: Session, todo_id: int):
-    t = db.query(Todo).filter(Todo.id == todo_id).first()
-    if not t:
-        return False
-    db.delete(t)
-    db.commit()
+# Notes
+async def create_note(session: AsyncSession, owner_id: int, title: str, content: str):
+    note = Note(owner_id=owner_id, title=title, content=content)
+    session.add(note)
+    await session.commit()
+    await session.refresh(note)
+    return note
+
+async def get_note_by_id(session: AsyncSession, note_id: int):
+    q = select(Note).where(Note.id == note_id)
+    res = await session.execute(q)
+    return res.scalar_one_or_none()
+
+async def get_notes_by_owner(session: AsyncSession, owner_id: int):
+    q = select(Note).where(Note.owner_id == owner_id).order_by(Note.created_at.desc())
+    res = await session.execute(q)
+    return res.scalars().all()
+
+async def search_notes_by_title(session: AsyncSession, owner_id: int, title: str):
+    q = select(Note).where(Note.owner_id == owner_id, Note.title.ilike(f"%{title}%"))
+    res = await session.execute(q)
+    return res.scalars().all()
+
+async def update_note(session: AsyncSession, note: Note, title: str | None, content: str | None):
+    if title is not None:
+        note.title = title
+    if content is not None:
+        note.content = content
+    session.add(note)
+    await session.commit()
+    await session.refresh(note)
+    return note
+
+async def delete_note(session: AsyncSession, note: Note):
+    await session.delete(note)
+    await session.commit()
     return True
