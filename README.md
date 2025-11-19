@@ -104,6 +104,11 @@ Para comprovar que o Nginx está distribuindo as requisições entre os três ba
 3.  Faça login ou crie notas na aplicação.
 4.  Observe nos logs que o `upstream` muda, indicando que diferentes containers (`172.x.x.3`, `172.x.x.4`, etc.) estão respondendo às requisições.
 
+## Diagrama do Fluxo entre conteiners
+
+<img width="2115" height="1738" alt="Diagrama de Fluxo-2025-11-19-132538" src="https://github.com/user-attachments/assets/ca771a0a-a008-4d67-9e06-f419dbf524d6" />
+
+
 ##  Erros Comuns e Soluções
 
 Durante o desenvolvimento, estes foram alguns desafios encontrados e solucionados:
