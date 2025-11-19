@@ -1,6 +1,7 @@
 # ToDo Distribuído (AV3 - Sistemas Distribuídos)
 
-Projeto de exemplo para a AV3 — ToDo list distribuído em containers.# CENTRO UNIVERSITÁRIO SENAI CIMATEC
+Projeto de exemplo para a AV3 — ToDo list distribuído em containers. 
+# CENTRO UNIVERSITÁRIO SENAI CIMATEC
 ## Sistemas Distribuídos - Atividade Avaliativa 3 (AV3)
 
 ###  Integrantes do Grupo
