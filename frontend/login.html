@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - Minhas Notas</title>
@@ -8,36 +8,44 @@
     <!-- CSS Global -->
     <link rel="stylesheet" href="./css/login.css" />
     <link rel="stylesheet" href="./css/toast.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="login-container">
-        <div class="login-card">
+      <div class="login-card">
+        <h1 class="login-title">Seja Bem Vindo</h1>
+        <p class="login-subtitle">Acesse sua conta para continuar</p>
 
-            <h1 class="login-title">Seja Bem Vindo</h1>
-            <p class="login-subtitle">Acesse sua conta para continuar</p>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Digite seu email" />
+          </div>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="text" id="email" placeholder="Digite seu email" />
-            </div>
+          <div class="form-group">
+            <label for="password">Senha</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Digite sua senha"
+            />
+          </div>
 
-            <div class="form-group">
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" placeholder="Digite sua senha" />
-            </div>
+          <div id="loginError" class="hidden error-box">
+            Email ou senha incorretos.
+          </div>
 
-            <button class="btn-login" onclick="loginUser()">Entrar</button>
+          <button type="submit" class="btn-login">Entrar</button>
 
-            <div class="link">
-                Primeira vez usando o Minhas Notas?
-             <a href="register.html">Cadastre-se</a>
-            </div>
-
-        </div>
+          <div class="link">
+            Primeira vez usando o Minhas Notas?
+            <a href="./register.html">Cadastre-se</a>
+          </div>
+        </form>
+      </div>
     </div>
 
     <script src="./js/toast.js"></script>
     <script src="./js/login.js"></script>
-</body>
+  </body>
 </html>

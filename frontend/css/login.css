@@ -115,3 +115,13 @@ input {
 .link a:hover {
     text-decoration: underline;
 }
+
+.loginError {
+    color: #ff6b6b;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.hidden {
+    display: none;
+}

@@ -52,12 +52,12 @@ function renderNotes(notes) {
 
     <div class="mt-4 flex gap-2">
         <button onclick="editNote(${n.id}, '${escapeJs(n.title)}', '${escapeJs(n.content)}')"
-            class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">
+            class="btn-edit">
             Editar
         </button>
 
         <button onclick="deleteNote(${n.id})"
-            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+            class="btn-delete">
             Excluir
         </button>
     </div>
@@ -200,7 +200,57 @@ function clearSearch() {
 // ============================
 // MONITORAR DIGITAÇÃO DA BARRA DE BUSCA
 // ============================
-document.getElementById("searchInput").addEventListener("input", searchNotes);
+//document.getElementById("searchInput").addEventListener("input", searchNotes);
+
+
+// ============================
+// ESCONDER BOTÃO "NOVA NOTA" DURANTE A BUSCA
+// ============================
+const searchInput = document.getElementById("searchInput");
+const newNoteBtn = document.getElementById("btnNewNote");
+const searchBtn = document.getElementById("btnSearch");
+const clearBtn = document.getElementById("btnClear");
+
+// Estado inicial
+searchBtn.disabled = true;
+clearBtn.style.display = "none";
+
+// Atualizar UI
+function updateSearchUI() {
+    const text = searchInput.value.trim();
+
+    if (text === "") {
+        // Campo vazio
+        newNoteBtn.classList.remove("hidden");
+        newNoteBtn.style.display = "";    // volta ao display original definido no CSS
+        searchBtn.disabled = true;
+        clearBtn.style.display = "none";
+    } else {
+        // Campo com texto
+        newNoteBtn.style.display = "none";
+        searchBtn.disabled = false;
+        clearBtn.style.display = "inline-block";  
+    }
+}
+
+searchInput.addEventListener("input", updateSearchUI);
+
+// Buscar ao pressionar Enter
+searchInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter" && !searchBtn.disabled) {
+        e.preventDefault();
+        searchBtn.click();
+    }
+});
+
+// Botão limpar
+clearBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    updateSearchUI();
+    loadNotes(); // recarrega notas
+});
+
+
 
 // ------------------ LOGOUT ------------------
 function logoutUser() {

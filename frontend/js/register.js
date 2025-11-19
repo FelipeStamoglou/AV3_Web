@@ -6,16 +6,9 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const username = document.getElementById("username").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
-    const confirm = document.getElementById("confirm").value.trim();
-
+    
     const errorBox = document.getElementById("registerError");
     errorBox.classList.add("hidden");
-
-    if (password !== confirm) {
-        errorBox.textContent = "As senhas não coincidem.";
-        errorBox.classList.remove("hidden");
-        return;
-    }
 
     try {
         const res = await fetch(`${API}/register`, {
