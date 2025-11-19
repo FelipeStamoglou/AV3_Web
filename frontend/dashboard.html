@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Notas</title>
+
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Toast -->
+    <style>
+        #toast {
+            transition: opacity .4s ease;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-purple-700">Minhas Notas</h1>
+
+        <button onclick="logoutUser()"
+                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+            Sair
+        </button>
+    </nav>
+
+    <!-- CONTAINER -->
+    <main class="max-w-4xl mx-auto mt-8 px-4">
+
+        <!-- SEARCH + ADD -->
+        <div class="flex items-center gap-3 mb-6">
+            <input id="searchInput"
+                   type="text"
+                   placeholder="Buscar nota..."
+                   class="flex-1 p-2 border rounded">
+
+            <button id="btnClear"
+                    onclick="clearSearch()"
+                    class="hidden bg-gray-400 text-white px-3 py-2 rounded">
+                Limpar
+            </button>
+
+            <button onclick="openModal()"
+                    class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+                Nova Nota
+            </button>
+        </div>
+
+        <!-- NOTES GRID -->
+        <div id="notesGrid"
+             class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        </div>
+    </main>
+
+    <!-- MODAL -->
+    <div id="noteModal"
+         class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+
+        <div class="bg-white shadow-lg rounded p-6 w-96">
+
+            <h2 id="modalTitle" class="text-xl font-bold mb-4"></h2>
+
+            <input id="modalTitleInput"
+                   type="text"
+                   placeholder="Título"
+                   class="w-full p-2 border rounded mb-3">
+
+            <textarea id="modalContentInput"
+                      placeholder="Conteúdo"
+                      class="w-full p-2 border rounded mb-4 h-32"></textarea>
+
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal()"
+                        class="px-4 py-2 bg-gray-300 rounded">
+                    Cancelar
+                </button>
+
+                <button onclick="saveNote()"
+                        class="px-4 py-2 bg-purple-600 text-white rounded">
+                    Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast"
+         class="hidden fixed bottom-4 right-4 bg-purple-600 text-white px-4 py-2 rounded shadow">
+    </div>
+
+    <!-- JS -->
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
